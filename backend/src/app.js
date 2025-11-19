@@ -4,9 +4,11 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 
-const authroutes = require("./routes/auth.routes");
+const authRoutes = require("./routes/auth.routes");
 const errorHandler = require("./middleware/errorHandler");
 const clinicRoutes = require("./routes/clinic.routes");
+const patientRoutes = require("./routes/patient.routes");
+const scheduleRoutes = require("./routes/doctor-schedule.routes");
 
 const app = express();
 
@@ -16,8 +18,10 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 //Routes
-app.use("/api/auth", authroutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/clinics", clinicRoutes);
+app.use("/api/patients", patientRoutes);
+app.use("/api/doctor-schedule", scheduleRoutes);
 
 // Global error handler
 app.use(errorHandler);
