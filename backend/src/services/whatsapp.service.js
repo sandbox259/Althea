@@ -76,9 +76,43 @@ async function sendMessage({ clinicId, to, message }) {
   return resp.data;
 }
 
+async function sendDocumentMessage({ clinicId, to, url, filename }) {
+  const credSql = `SELECT phone_number_id, access_token_enc FROM whatsapp_credentials WHERE clinic_id=$1 LIMIT 1`;
+  const credRes = await db.query(credSql, [clinicId]);
+
+  if (!credRes.rows.length) throw new Error("WhatsApp credentials missing");
+
+  const { phone_number_id, access_token_enc } = credRes.rows[0];
+  const token = decryptText(access_token_enc);
+
+  const payload = {
+    messaging_product: "whatsapp",
+    to,
+    type: "document",
+    document: {
+      link: url,
+      filename
+    }
+  };
+
+  const resp = await axios.post(
+    `https://graph.facebook.com/${WA_API_VERSION}/${phone_number_id}/messages`,
+    payload,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+
+  return resp.data;
+}
+
 module.exports = {
   lookupClinicByPhoneNumberId,
   logIncoming,
   logOutgoing,
-  sendMessage
+  sendMessage,
+  sendDocumentMessage
 };
