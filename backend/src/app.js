@@ -9,6 +9,7 @@ const errorHandler = require("./middleware/errorHandler");
 const clinicRoutes = require("./routes/clinic.routes");
 const patientRoutes = require("./routes/patient.routes");
 const scheduleRoutes = require("./routes/doctor-schedule.routes");
+const whatsappRoutes = require("./routes/whatsapp.routes");
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/clinics", clinicRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/doctor-schedule", scheduleRoutes);
+app.use("/api/whatsapp", whatsappRoutes);
 
 // Global error handler
 app.use(errorHandler);
